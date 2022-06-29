@@ -1,38 +1,6 @@
 from random import *
 from user import User_game
 
-tool_game = ["Pierre","Ciseau","Papier"]
-
-
-def verif_win(j1, bot):
-    # 0 : null
-    # 1 : J1
-    # 2 : Bot
-    match j1:
-        case "Pierre":
-            if bot == tool_game[0]:
-                return 0
-            if bot == tool_game[1]:
-                return 1
-            if bot == tool_game[2]:
-                return 2
-        case "Ciseau":
-            if bot == tool_game[0]:
-                return 2
-            if bot == tool_game[1]:
-                return 0
-            if bot == tool_game[2]:
-                return 1
-        case "Papier":
-            if bot == tool_game[0]:
-                return 1
-            if bot == tool_game[1]:
-                return 2
-            if bot == tool_game[2]:
-                return 0
-
-
-
 player = ""
 max_point = 0
 tour = 1
@@ -56,20 +24,25 @@ while bot.point != max_point or bot.point != max_point:
         tool_tour = int(tool_tour)
         if tool_tour > 0 or tool_tour < 2:
             tool_bot = bot.random_tool
-            tool_j1 = tool_game[tool_tour]
-            point = verif_win(tool_j1,tool_bot)
-            if point == 1:
-                joueur.point += 1
+            tool_j1 = joueur.tool_game[tool_tour]
+            point = joueur.verif_win(tool_j1, tool_bot)
+            
+            if point == 1: 
+                joueur.add_point
                 print(f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {joueur.name} ce qui fait {joueur.point}')
-            if point == 2:
-                bot.point += 1
+            if point == 2: 
+                bot.add_point
                 print(f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {bot.name} ce qui fait {bot.point}')
+            if point == 0:
+                print('Match Nul')
+
         else:
             print('Hors plage')
             pass
     else:
-        print('Veuillez rentrer un nombre !')
+        print('Veuillez rentrer un nombre ! \n -------------------------------------')
         pass
+    print('--------------------------')
 
 if bot.point == max_point:
     print(f'{bot.name} à remporté le match')
