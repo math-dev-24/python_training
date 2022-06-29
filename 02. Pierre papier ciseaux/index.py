@@ -56,9 +56,11 @@ while bot.point != max_point or bot.point != max_point:
             if point == 1: 
                 joueur.add_point()
                 print(f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {joueur.name} ce qui fait {joueur.point}')
+                print('--------------------------')
             if point == 2: 
                 bot.add_point()
                 print(f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {bot.name} ce qui fait {bot.point}')
+                print('--------------------------')
             if point == 0:
                 print('Match Nul')
 
