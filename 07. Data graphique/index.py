@@ -1,0 +1,1 @@
+print('affichage data via graphique')

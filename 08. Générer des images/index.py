@@ -1,0 +1,1 @@
+print('Générateur d\image')
