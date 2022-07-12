@@ -65,7 +65,7 @@ class User:
             return User.DB.insert(self.__dict__)
 
 
-def get_all_user():
+def get_all_users():
     return [User(**user) for user in User.DB.all()]
 
 

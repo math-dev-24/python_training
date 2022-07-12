@@ -25,10 +25,6 @@ def test_full_name(user):
     assert user.full_name == "Patrick Martin"
 
 
-def test_delete(user):
-    assert False
-
-
 def test_db_instance(user):
     assert isinstance(user.db_instance, table.Document)
     assert user.db_instance['first_name'] == "Patrick"
@@ -64,6 +60,7 @@ def test__check_names_empty(setup_db):
         user_no_name._check_names()
     assert "Le prénom et le nom de famille ne peuvent pas être vides." in str(err.value)
 
+
 def test__check_names_invalid_character(setup_db):
     user_no_name = User(first_name="Pat_24", last_name="test23", address="20 route du vieux chateau",
                 phone_number="0123456789")
@@ -83,5 +80,27 @@ def test_not_exists(setup_db):
     assert user.exists() is False
 
 
-def test_save():
-    assert False
+def test_save(setup_db):
+    user_test = User(first_name="test", last_name="test", address="20 route du vieux chateau",
+                phone_number="0123456789")
+    user_test.save()
+    first = user_test.delete()
+    second = user_test.delete()
+    assert len(first) > 0
+    assert isinstance(first, list)
+    assert len(second) == 0
+    assert isinstance(second, list)
+
+
+def test_delete(user):
+    user_test = User(first_name="test", last_name="test", address="20 route du vieux chateau",
+                phone_number="0123456789")
+    user_test_dup = User(first_name="test", last_name="test", address="20 route du vieux chateau",
+                phone_number="0123456789")
+
+    first = user_test.save()
+    second = user_test_dup.save()
+    assert isinstance(first, int)
+    assert isinstance(second, int)
+    assert first > 0
+    assert second == -1

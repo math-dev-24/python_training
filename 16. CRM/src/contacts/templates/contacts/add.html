@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <form action="{% url 'add-contact' %}" method="POST" class="d-flex flex-column">
+        {% csrf_token %}
+        <h4 class="text-center">Ajouter un contact :</h4>
+        <label class="form-label" for="first_name">Prénom :</label>
+        <input class="form-control" type="text" id="first_name" name="first_name">
+        <label class="form-label" for="last_name">Nom :</label>
+        <input class="form-control" type="text" id="last_name" name="last_name">
+        <label class="form-label" for="address">Adresse :</label>
+        <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+        <label class="form-label" for="phone_number">Téléphone :</label>
+        <input class="form-control" type="text" id="phone_number" name="phone_number">
+        <button type="submit" class="btn btn-success m-2">Ajoutez</button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="d-flex flex-row flex-wrap">
+        {% for user in users %}
+        <div class="card m-4" style="width: 18rem;">
+            <div class="card-body">
+                <h2 class="card-title">{{user.full_name}}</h2>
+                <div class="card-text">
+                    <span>{{user.phone_number}}</span>
+                    <br>
+                    <span>{{user.address}}</span>
+                </div>
+                <div>
+                    <form action="{% url 'delete-contact' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="first_name" value="{{user.first_name}}">
+                        <input type="hidden" name="last_name" value="{{user.last_name}}">
+                        <button class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
