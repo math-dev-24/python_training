@@ -1,6 +1,6 @@
 import re
 import string
-from tinydb import TinyDB, where
+from tinydb import TinyDB, where, table
 from pathlib import Path
 
 
@@ -18,7 +18,7 @@ class User:
         return f"{self.first_name} {self.last_name}"
 
     @property
-    def db_instance(self):
+    def db_instance(self) -> table.Document:
         return User.DB.get((where('first_name') == self.first_name) & (where("last_name") == self.last_name))
 
     # Quand on appelle l'object cela va afficher ça

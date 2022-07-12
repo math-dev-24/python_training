@@ -1,6 +1,6 @@
 from crm import User
 import pytest
-from tinydb import TinyDB
+from tinydb import TinyDB, table
 from tinydb.storages import MemoryStorage
 
 
@@ -29,8 +29,18 @@ def test_delete(user):
     assert False
 
 
-def test_db_instance():
-    assert False
+def test_db_instance(user):
+    assert isinstance(user.db_instance, table.Document)
+    assert user.db_instance['first_name'] == "Patrick"
+    assert user.db_instance['last_name'] == "Martin"
+    assert user.db_instance['address'] == "20 route du vieux chateau"
+    assert user.db_instance['phone_number'] == "0123456789"
+
+
+def test_no_db_instance(setup_db):
+    user = User(first_name="test", last_name="test", address="20 route du vieux chateau",
+                phone_number="0123456789")
+    assert user.db_instance is None
 
 
 def test__check_phone_number():
