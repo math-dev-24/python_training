@@ -1,1 +1,1 @@
-print('Jeux du morpion')
+print('Jeux du pendu')
