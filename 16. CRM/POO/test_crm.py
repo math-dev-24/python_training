@@ -43,12 +43,34 @@ def test_no_db_instance(setup_db):
     assert user.db_instance is None
 
 
-def test__check_phone_number():
-    assert False
+def test__check_phone_number(setup_db):
+    user_good = User(first_name="Patrick", last_name="Martin", address="20 route du vieux chateau",
+                phone_number="0123456789")
+    user_bad = User(first_name="Patrick", last_name="Martin", address="20 route du vieux chateau",
+                phone_number="adzd")
+    with pytest.raises(ValueError) as err:
+        user_bad._check_phone_number()
+    assert "invalide" in str(err.value)
+
+    user_good.save(validate_data=True)
+    assert user_good.exists() is True
 
 
-def test__check_names():
-    assert False
+def test__check_names_empty(setup_db):
+    user_no_name = User(first_name="", last_name="", address="20 route du vieux chateau",
+                phone_number="0123456789")
+
+    with pytest.raises(ValueError) as err:
+        user_no_name._check_names()
+    assert "Le prénom et le nom de famille ne peuvent pas être vides." in str(err.value)
+
+def test__check_names_invalid_character(setup_db):
+    user_no_name = User(first_name="Pat_24", last_name="test23", address="20 route du vieux chateau",
+                phone_number="0123456789")
+
+    with pytest.raises(ValueError) as err:
+        user_no_name._check_names()
+    assert "Nom invalide" in str(err.value)
 
 
 def test_exists():
