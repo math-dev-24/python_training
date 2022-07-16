@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Page de simulation</h1>
+<form action="{% url 'calcul' %}" method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="fluid">Fluide :</label>
+        <select name="fluid" id="fluid">
+            {% for fluid in fluids %}
+                <option value="{{fluid}}">{{fluid}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="t_cdr">Température de condensation :</label>
+        <input type="number" name="t_cdr" id="t_cdr" required>
+    </div>
+    <div>
+        <label for="t_o">Température d'évaporation :</label>
+        <input type="number" name="t_o" id="t_o" required>
+    </div>
+    <button type="submit">Calculer</button>
+    {% if msg_err %}
+    <div style="color: red;">
+        {{msg_err}}
+    </div>
+    {% endif %}
+</form>
+
+<div>
+    {% if results %}
+        <pre>{{results}}</pre>
+    {% endif %}
+</div>
+
+
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock content %}
