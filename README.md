@@ -1,10 +1,10 @@
 # Python Training student
 
 
-**** Jeux du juste prix
+***Jeux du juste prix
   OK
 
-**** Pierre papier Ciseaux
+***Pierre papier Ciseaux
 
 
 
