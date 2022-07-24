@@ -1,6 +1,6 @@
 # Python Training student
 
-[x] Jeux du Juste prix
+[X] Jeux du Juste prix
 [x] Pierre papier Ciseaux
 [x] Générateur nombres de la suite de fibonacci
 [x] Algorithme de recherche dichotomique
