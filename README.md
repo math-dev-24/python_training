@@ -10,3 +10,12 @@
 [] Générer des images
 [x] Todo simple avec PySide6
 [x] Soft simulation fluide frigorigène avec Refprop
+
+
+# Python training Student
+
+___
+
+[x] Jeux du Juste prix
+[x] Pierre papier ciseau
+[x] Générateur nombres de la suite de fibonacci
