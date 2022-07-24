@@ -1,6 +1,5 @@
 # Python Training student
 
-[ ] test
 [x] Jeux du Juste prix
 [x] Pierre papier Ciseaux
 [x] Générateur nombres de la suite de fibonacci
