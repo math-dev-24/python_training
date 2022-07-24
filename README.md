@@ -1,5 +1,13 @@
 # Python Training student
 
+
+**** Jeux du juste prix
+  OK
+
+**** Pierre papier Ciseaux
+
+
+
 [X] Jeux du Juste prix
 [x] Pierre papier Ciseaux
 [x] Générateur nombres de la suite de fibonacci
