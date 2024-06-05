@@ -5,7 +5,9 @@ player = ""
 max_point = 0
 tour = 1
 tool_game = ["Pierre", "Ciseau", "Papier"]
-def verif_win( j1, bot):
+
+
+def verif_win(j1, bot):
     # 0 : null
     # 1 : J1
     # 2 : Bot
@@ -31,15 +33,15 @@ def verif_win( j1, bot):
         if bot == tool_game[2]:
             return 0
 
+
 while player == "":
     player = str(input("Quel est votre pseudo ? >"))
 
-while  max_point < 1:
-        max = input("En Combien de point ? >")
-        if max.isnumeric():
-            max_point = int(max)
+while max_point < 1:
+    max = input("En Combien de point ? >")
+    if max.isnumeric():
+        max_point = int(max)
 
-#Initialisation des joueurs
 bot = User_game("bot")
 joueur = User_game(player)
 
@@ -52,14 +54,16 @@ while bot.point != max_point or bot.point != max_point:
             tool_bot = bot.random_tool(tool_game)
             tool_j1 = tool_game[tool_tour]
             point = verif_win(tool_j1, tool_bot)
-            
-            if point == 1: 
+
+            if point == 1:
                 joueur.add_point()
-                print(f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {joueur.name} ce qui fait {joueur.point}')
+                print(
+                    f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {joueur.name} ce qui fait {joueur.point}')
                 print('--------------------------')
-            if point == 2: 
+            if point == 2:
                 bot.add_point()
-                print(f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {bot.name} ce qui fait {bot.point}')
+                print(
+                    f'{joueur.name} : {tool_j1} VS {bot.name} : {tool_bot} \n +1 point pour {bot.name} ce qui fait {bot.point}')
                 print('--------------------------')
             if point == 0:
                 print('Match Nul')
@@ -76,13 +80,3 @@ if bot.point == max_point:
     print(f'{bot.name} à remporté le match')
 if joueur.point == max_point:
     print(f'Vous avez remporté le combat {joueur.bot}')
-
-
-
-
-
-
-
-
-
-
