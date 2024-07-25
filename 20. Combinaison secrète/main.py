@@ -41,7 +41,7 @@ class Mastermind(Colors):
             if not self.check():
                 self.show_invalid_input_message()
             else:
-                self.get_indicator()
+                print(self.get_user_selection_text())
                 if self.done:
                     if self.win:
                         cprint(f"Vous avez gagné ! Bravo ! En {self.attempts} coups !", attrs=[Color.GREEN, Format.BOLD])
