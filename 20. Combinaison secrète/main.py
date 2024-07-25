@@ -1,64 +1,38 @@
-from term_printer import Color, Format, cprint, StdText
+# ____
 from random import randint
-
-TITLE: str = "JEU DU MASTERMIND"
-
-RULES: str = """Trouver la bonne combinaison des quatre couleurs sectrètes !
-2 modes de jeu :
-normal : 
-    Règle classique : 
-    * A chaque couleur bien positionnée, vous aurez en retour un indicateur rouge.
-    * A chaque couleur présent mais mal positionnée, vous auez en retour un indicateur blanc.
-    * les pastilles indique juste la présence ou bon positionnement de la couleur.
-easy : 
-    Les indicateurs sont positionnés en face de la couleur.
-    * Même code couleur que le mode normal.
-    * La couleur noir correspond à une couleur non présente.
-    
-"""
-
-SQUARE: str = "\u25A0"
-PASTILLE: str = "\u25CF"
-
-COLOR: list[list[str | Color]] = [
-    ['Jaune', Color.YELLOW],
-    ['Blue', Color.BLUE],
-    ['Rouge', Color.RED],
-    ['Vert', Color.GREEN],
-    ['Blanc', Color.WHITE],
-    ['Magenta', Color.MAGENTA]
-]
-DIFFICULTY: list[str] = ["easy", "normal"]
+# ____
+from term_printer import Color, Format, cprint
+from colorama import Fore
+# ____
+from constantes import TITLE, RULES, SQUARE, PASTILLE, Colors, DIFFICULTY
 
 
-class Mastermind:
+class Mastermind(Colors):
     def __init__(self):
         self.difficulty: str = ""
         self.target: list[int] = []
         self.user: list[int] = []
-        self.indicators: list[list[str | Color]] = []
+        self.indicators: list[Fore] = []
         self.done: bool = False
         self.attempts: int = 0
+        self.max_attempts: int = 10
+        self.win: bool = False
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self):
         cprint(f"{TITLE}", attrs=[Color.BG_MAGENTA])
         print(RULES)
+        self.game()
 
-        self.generate_random_combination()
-
+    def choice_difficulty(self):
         while self.difficulty not in DIFFICULTY:
-            cprint("Choix de la difficulté : easy | normal", attrs=[Format.BOLD])
-            self.difficulty = input("🎤️ > ").strip()
-        self.print_available_colors()
-        if self.difficulty == "easy":
-            self.eay_mode()
-        else:
-            self.normal_mode()
+            cprint("Choix de la difficulté : facile | normal", attrs=[Format.BOLD])
+            self.difficulty = input("🎤️ > ").strip().lower()
 
-    def normal_mode(self):
-        pass
-
-    def eay_mode(self):
+    def game(self):
+        self.choice_difficulty()
+        self.print_all_colors()
+        self.generate_random_combination()
+        self.win = False
         while True:
             self.indicators = []
             self.user = []
@@ -69,58 +43,70 @@ class Mastermind:
             else:
                 self.get_indicator()
                 if self.done:
-                    cprint(f"Vous avez gagné ! Bravo ! En {self.attempts} coups !", attrs=[Color.GREEN, Format.BOLD])
+                    if self.win:
+                        cprint(f"Vous avez gagné ! Bravo ! En {self.attempts} coups !", attrs=[Color.GREEN, Format.BOLD])
+                    else:
+                        cprint(f"Vous avez perdu !", attrs=[Color.RED, Format.BOLD])
                     break
-                self.print_user_selection()
-                self.print_indicators()
+                self.print_response()
+        self.restart()
+
+    def restart(self):
+        cprint(f"Voulez-vous continuer ? Oui | Non", attrs=[Color.BG_MAGENTA, Format.UNDERLINE])
+        if input('🎤️ > ').strip().lower() == "oui":
+            self.game()
+        else:
+            cprint("Au revoir !!!", attrs=[Color.RED, Format.BOLD])
+            exit()
 
     def generate_random_combination(self):
+        self.target = []
         for _ in range(4):
             self.target.append(randint(1, 6))
 
     def question(self):
-        cprint("\n Veuillez saisir vos quatre chiffres pour les couleurs !", attrs=[Format.UNDERLINE])
+        print("\n Veuillez saisir vos quatre chiffres pour les couleurs :")
         self.user = [int(i) for i in input('🎤️ > ').strip() if i.isnumeric()]
 
     def check(self) -> bool:
         return len(self.user) == 4 and min(self.user) > 0 and max(self.user) < 7
 
     def get_indicator(self):
-        red = COLOR[2]
-        white = COLOR[4]
+        red = Fore.RED
+        white = Fore.WHITE
         count: int = 0
+        tmp_target: list[int] = self.target.copy()
         for i in range(len(self.target)):
-            # présent mais mal positionné
-            if self.user[i] in self.target and self.user[i] != self.target[i]:
+
+            if self.user[i] in self.target and self.user[i] != self.target[i] and self.user[i] in tmp_target:
+                tmp_target.remove(self.user[i])
                 self.indicators.append(white)
-            # présent et bien positionné
-            elif self.user[i] == self.target[i]:
+
+            elif self.user[i] == self.target[i] and self.user[i] in tmp_target:
+                tmp_target.remove(self.user[i])
                 self.indicators.append(red)
                 count += 1
-            # pas présent
+
             else:
                 self.indicators.append([])
 
-        # gestion fin du jeu ?
-        self.done = count == 4
+        self.win = count == 4
+        self.done = count == 4 or self.attempts == self.max_attempts
 
-    def print_user_selection(self):
-        selected_colors = [COLOR[num - 1][1] for num in self.user]
-        cprint(
-            f"Votre choix : {StdText(SQUARE, selected_colors[0])} {StdText(SQUARE, selected_colors[1])} "
-            f"{StdText(SQUARE, selected_colors[2])} {StdText(SQUARE, selected_colors[3])}")
+    def print_response(self):
+        print(f"{self.get_user_selection_text()} - Indicateurs : {self.get_indicators_text()}")
 
-    def print_indicators(self):
-        tmp = [ind[1] if ind else Color.BLACK for ind in self.indicators]
-        cprint(
-            f"Indicateur :  {StdText(PASTILLE, tmp[0])} {StdText(PASTILLE, tmp[1])} "
-            f"{StdText(PASTILLE, tmp[2])} {StdText(PASTILLE, tmp[3])}"
-        )
+    def get_user_selection_text(self):
+        u_colors: list[Fore] = [self.COLORS[num - 1][1] for num in self.user]
+        return ' '.join(self.print_color(SQUARE, color) for color in u_colors)
 
-    @staticmethod
-    def print_available_colors():
-        color_list_label: list[str] = [f"[{i + 1}]{color[0]}" for i, color in enumerate(COLOR)]
-        print("   ".join(color_list_label))
+    def get_indicators_text(self):
+        if self.difficulty == "facile":
+            tmp = [ind if ind else Fore.BLACK for ind in self.indicators]
+            return ' '.join(self.print_color(PASTILLE, color) for color in tmp)
+        else:
+            tmp = [ind for ind in self.indicators if ind]
+            return ''.join(self.print_color(PASTILLE, color) for color in tmp)
 
     @staticmethod
     def show_invalid_input_message():
