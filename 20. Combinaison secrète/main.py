@@ -29,6 +29,7 @@ class Mastermind(Colors):
             self.difficulty = input("🎤️ > ").strip().lower()
 
     def game(self):
+        self.difficulty = ""
         self.choice_difficulty()
         self.print_all_colors()
         self.generate_random_combination()
@@ -41,13 +42,13 @@ class Mastermind(Colors):
             if not self.check():
                 self.show_invalid_input_message()
             else:
-                self.get_indicator()
+                self.calc_indicator()
                 if self.done:
                     if self.win:
                         print(self.get_user_selection_text())
-                        cprint(f"Vous avez gagné ! Bravo ! En {self.attempts} coups !", attrs=[Color.GREEN, Format.BOLD])
+                        self.print_good_guess()
                     else:
-                        cprint(f"Vous avez perdu !", attrs=[Color.RED, Format.BOLD])
+                        self.print_bad_guess()
                     break
                 self.print_response()
         self.restart()
@@ -57,7 +58,7 @@ class Mastermind(Colors):
         if input('🎤️ > ').strip().lower() == "oui":
             self.game()
         else:
-            cprint("Au revoir !!!", attrs=[Color.RED, Format.BOLD])
+            self.print_goodbye()
             exit()
 
     def generate_random_combination(self):
@@ -67,12 +68,16 @@ class Mastermind(Colors):
 
     def question(self):
         print("\n Veuillez saisir vos quatre chiffres pour les couleurs :")
-        self.user = [int(i) for i in input('🎤️ > ').strip() if i.isnumeric()]
+        tmp_input = input('🎤️ > ').strip()
+        if tmp_input == "exit":
+            self.print_goodbye()
+            exit()
+        self.user = [int(i) for i in tmp_input if i.isnumeric()]
 
     def check(self) -> bool:
         return len(self.user) == 4 and min(self.user) > 0 and max(self.user) < 7
 
-    def get_indicator(self):
+    def calc_indicator(self):
         red = Fore.RED
         white = Fore.WHITE
         count: int = 0
@@ -87,7 +92,6 @@ class Mastermind(Colors):
                 tmp_target.remove(self.user[i])
                 self.indicators.append(red)
                 count += 1
-
             else:
                 self.indicators.append([])
 
@@ -96,6 +100,9 @@ class Mastermind(Colors):
 
     def print_response(self):
         print(f"{self.get_user_selection_text()} - Indicateurs : {self.get_indicators_text()}")
+
+    def print_good_guess(self):
+        cprint(f"Vous avez gagné ! Bravo ! En {self.attempts} coups !", attrs=[Color.GREEN, Format.BOLD])
 
     def get_user_selection_text(self):
         u_colors: list[Fore] = [self.COLORS[num - 1][1] for num in self.user]
@@ -112,6 +119,14 @@ class Mastermind(Colors):
     @staticmethod
     def show_invalid_input_message():
         cprint("Votre saisie est incorrecte...", attrs=[Color.RED])
+
+    @staticmethod
+    def print_bad_guess():
+        cprint(f"Vous avez perdu !", attrs=[Color.RED, Format.BOLD])
+
+    @staticmethod
+    def print_goodbye():
+        cprint("Au revoir !!!", attrs=[Color.RED, Format.BOLD])
 
 
 if __name__ == "__main__":
