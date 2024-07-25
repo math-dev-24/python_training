@@ -51,10 +51,11 @@ class Mastermind(Colors):
                         self.print_bad_guess()
                     break
                 self.print_response()
+                self.print_rest()
         self.restart()
 
     def restart(self):
-        cprint(f"Voulez-vous continuer ? Oui | Non", attrs=[Color.BG_MAGENTA, Format.UNDERLINE])
+        cprint(f"Voulez-vous continuer ? Oui | Non", attrs=[Color.MAGENTA, Format.UNDERLINE])
         if input('🎤️ > ').strip().lower() == "oui":
             self.game()
         else:
@@ -115,6 +116,9 @@ class Mastermind(Colors):
         else:
             tmp = [ind for ind in self.indicators if ind]
             return ''.join(self.print_color(PASTILLE, color) for color in tmp)
+
+    def print_rest(self):
+        cprint(f"Coup(s) restant(s) : {self.max_attempts - self.attempts}", attrs=[Format.ITALIC])
 
     @staticmethod
     def show_invalid_input_message():
