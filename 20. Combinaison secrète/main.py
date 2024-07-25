@@ -3,10 +3,18 @@ from random import randint
 
 TITLE: str = "JEU DU MASTERMIND"
 
-RULES: str = """Trouver la bonne combinaison de quatre couleurs  sectrète !
-* A chaque couleur bien positionnée, vous aurez en retour un indicateur rouge.
-* A chaque couleur présent mais mal positionnée, vous auez en retour un indicateur blanc.
-* A chaque couleur non présente l'indicateur seras noir.
+RULES: str = """Trouver la bonne combinaison des quatre couleurs sectrètes !
+2 modes de jeu :
+normal : 
+    Règle classique : 
+    * A chaque couleur bien positionnée, vous aurez en retour un indicateur rouge.
+    * A chaque couleur présent mais mal positionnée, vous auez en retour un indicateur blanc.
+    * les pastilles indique juste la présence ou bon positionnement de la couleur.
+easy : 
+    Les indicateurs sont positionnés en face de la couleur.
+    * Même code couleur que le mode normal.
+    * La couleur noir correspond à une couleur non présente.
+    
 """
 
 SQUARE: str = "\u25A0"
@@ -20,10 +28,12 @@ COLOR: list[list[str | Color]] = [
     ['Blanc', Color.WHITE],
     ['Magenta', Color.MAGENTA]
 ]
+DIFFICULTY: list[str] = ["easy", "normal"]
 
 
 class Mastermind:
     def __init__(self):
+        self.difficulty: str = ""
         self.target: list[int] = []
         self.user: list[int] = []
         self.indicators: list[list[str | Color]] = []
@@ -33,9 +43,22 @@ class Mastermind:
     def __call__(self, *args, **kwargs):
         cprint(f"{TITLE}", attrs=[Color.BG_MAGENTA])
         print(RULES)
-        self.generate_random_combination()
-        self.print_available_colors()
 
+        self.generate_random_combination()
+
+        while self.difficulty not in DIFFICULTY:
+            cprint("Choix de la difficulté : easy | normal", attrs=[Format.BOLD])
+            self.difficulty = input("🎤️ > ").strip()
+        self.print_available_colors()
+        if self.difficulty == "easy":
+            self.eay_mode()
+        else:
+            self.normal_mode()
+
+    def normal_mode(self):
+        pass
+
+    def eay_mode(self):
         while True:
             self.indicators = []
             self.user = []
@@ -46,7 +69,7 @@ class Mastermind:
             else:
                 self.get_indicator()
                 if self.done:
-                    cprint(f"Vous avez gagné ! Bravo ! En {self.attempts} coup !", attrs=[Color.GREEN, Format.BOLD])
+                    cprint(f"Vous avez gagné ! Bravo ! En {self.attempts} coups !", attrs=[Color.GREEN, Format.BOLD])
                     break
                 self.print_user_selection()
                 self.print_indicators()
@@ -67,13 +90,18 @@ class Mastermind:
         white = COLOR[4]
         count: int = 0
         for i in range(len(self.target)):
+            # présent mais mal positionné
             if self.user[i] in self.target and self.user[i] != self.target[i]:
                 self.indicators.append(white)
+            # présent et bien positionné
             elif self.user[i] == self.target[i]:
                 self.indicators.append(red)
                 count += 1
+            # pas présent
             else:
                 self.indicators.append([])
+
+        # gestion fin du jeu ?
         self.done = count == 4
 
     def print_user_selection(self):
