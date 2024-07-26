@@ -29,11 +29,9 @@ class Mastermind(Colors):
             self.difficulty = input("🎤️ > ").strip().lower()
 
     def game(self):
-        self.difficulty = ""
         self.choice_difficulty()
         self.print_all_colors()
         self.generate_random_combination()
-        self.win = False
         while True:
             self.indicators = []
             self.user = []
@@ -43,29 +41,30 @@ class Mastermind(Colors):
                 self.show_invalid_input_message()
             else:
                 self.calc_indicator()
-                if self.done:
-                    if self.win:
-                        print(self.get_user_selection_text())
-                        self.print_good_guess()
-                    else:
-                        self.print_bad_guess()
-                    break
                 self.print_response()
+                if self.done:
+                    self.print_good_guess() if self.win else self.print_bad_guess()
+                    break
                 self.print_rest()
         self.restart()
+
+    def reset_game(self):
+        self.difficulty = ""
+        self.attempts = 0
+        self.win = False
+        self.done = False
 
     def restart(self):
         cprint(f"Voulez-vous continuer ? Oui | Non", attrs=[Color.MAGENTA, Format.UNDERLINE])
         if input('🎤️ > ').strip().lower() == "oui":
+            self.reset_game()
             self.game()
         else:
             self.print_goodbye()
             exit()
 
     def generate_random_combination(self):
-        self.target = []
-        for _ in range(4):
-            self.target.append(randint(1, 6))
+        self.target = [randint(1, 6) for _ in range(4)]
 
     def question(self):
         print("\n Veuillez saisir vos quatre chiffres pour les couleurs :")
